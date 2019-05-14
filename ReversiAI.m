@@ -18,7 +18,6 @@ u(5,5) = 1;
 u(4,5) = -1;
 u(5,4) = -1;
 plotgame(u);
-
 %% Play the game
 currentColor = 1; % start from black 
 h = 1/8;
@@ -33,10 +32,11 @@ while pass < 2 % exit with two consective pass
         continue;
     end
     p = sub2ind([8,8],i,j);
-    if u(i,j) == 0 % no stone
+    if u(i,j) == 0 || pass == 1 % no stone or pass
         % put the stone and reverse stones captured
         [u,currentColor,flipNum] = putstone(u,p,currentColor);
         if flipNum
+            pause(1);
             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
         end
     end
