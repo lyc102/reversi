@@ -3,7 +3,7 @@ function [u,currentColor,pass] = AIrand(u,currentColor,pass)
 %
 % This is the simplest move strategy: randomly chose a valid location.
 %
-% Long Chen 2019. May. 12.
+% Long Chen 2019. May. 13.
 
 %% Find all empty space
 p = find(u(:) == 0); % find empty space

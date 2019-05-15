@@ -36,8 +36,10 @@ while pass < 2 % exit with two consective pass
         % put the stone and reverse stones captured
         [u,currentColor,flipNum] = putstone(u,p,currentColor);
         if flipNum
+            pass = 0;
             pause(1);
-            [u,currentColor,pass] = AIrand(u,currentColor,pass); 
+%             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
+            [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
         end
     end
 end
