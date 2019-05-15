@@ -39,7 +39,8 @@ while pass < 2 % exit with two consective pass
             pass = 0;
             pause(1);
 %             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
-            [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
+%             [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
+            [u,currentColor,pass] = AItree(u,currentColor,pass);            
         end
     end
 end

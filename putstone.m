@@ -55,19 +55,21 @@ isflip(lineIdx(flipIdx)) = true;
 
 %% draw the stone
 flipNum = sum(isflip(:));
-if any(isflip(:)) && flag % the current position is allowed
+if any(isflip(:)) % the current position is allowed
     isflip(i,j) = true;   % draw the current one together
     u(isflip) = currentColor;
-    [i,j] = find(isflip);
-    x = (j-0.5)*h;
-    y = (i-0.5)*h;
-    hold on;
-    if currentColor == 1
-        plot(x,y,'o','LineWidth',1,'MarkerEdgeColor','k',...
-        'MarkerFaceColor','k','MarkerSize',36); 
-    else
-        plot(x,y,'o','LineWidth',1,'MarkerEdgeColor','k',...
-        'MarkerFaceColor','w','MarkerSize',36);             
+    if flag
+        [i,j] = find(isflip);
+        x = (j-0.5)*h;
+        y = (i-0.5)*h;
+        hold on;
+        if currentColor == 1
+            plot(x,y,'o','LineWidth',1,'MarkerEdgeColor','k',...
+            'MarkerFaceColor','k','MarkerSize',36); 
+        else
+            plot(x,y,'o','LineWidth',1,'MarkerEdgeColor','k',...
+            'MarkerFaceColor','w','MarkerSize',36);             
+        end
     end
     % exchange the color
     currentColor = -currentColor;

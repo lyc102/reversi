@@ -7,6 +7,7 @@ function fig = plotgame(u,varargin)
 %
 % Long Chen 2019. May. 12.
 
+plotboard;
 h = 1/8;
 [x,y] = meshgrid(0.5*h:h:1-0.5*h,0.5*h:h:1-0.5*h);
 isBlack = (u(:) == 1);
