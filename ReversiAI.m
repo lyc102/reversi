@@ -1,13 +1,16 @@
 %% ReversiAI
 %
-% This is a script to play Reversi (Heibai Qi). For the rules on this game,
-% please check https://en.wikipedia.org/wiki/Reversi
+% This is a script to play Reversi (Heibai Qi) against AIs. For the rules on
+% this game, please check https://en.wikipedia.org/wiki/Reversi
 %
 % Click outside of the board. Double pass ends the game.
 %
 % State values   0: empty;   1: black;   -1: white
 %
-% Long Chen 2019. May. 12.
+% Long Chen 2019. 
+% - May 13.  AI random
+% - May 14.  AI position value
+% - May 15.  AI tree search (depth 2)
 
 
 %% Initialize the game and draw the center stones
