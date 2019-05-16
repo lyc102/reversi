@@ -40,10 +40,11 @@ while pass < 2 % exit with two consective pass
         [u,currentColor,flipNum] = putstone(u,p,currentColor);
         if flipNum
             pass = 0;
-            pause(1);
+            pause(0.5);
 %             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
 %             [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
-            [u,currentColor,pass] = AItree(u,currentColor,pass);            
+%             [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
+            [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
         end
     end
 end
