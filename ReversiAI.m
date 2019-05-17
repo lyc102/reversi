@@ -11,7 +11,8 @@
 % - May 13.  AI random
 % - May 14.  AI position value
 % - May 15.  AI tree search (two steps)
-% - May 16.  AI tree search (depth > 2)
+% - May 15.  AI tree search (depth > 2)
+% - May 16.  AI tree search with top N pruning
 
 
 %% Initialize the game and draw the center stones
