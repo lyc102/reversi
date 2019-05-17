@@ -44,14 +44,14 @@ while pass < 2 % exit with two consective pass
     if u(i,j) == 0 || pass == 1 % no stone or pass
         % put the stone and reverse stones captured
         [u,currentColor,flipNum] = putstone(u,p,currentColor);
-        if flipNum
+        if flipNum || pass == 1
             pass = 0;
             pause(0.5);
 %             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
 %             [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
 %             [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
 %             [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
-            [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/10));            
+            [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/5));            
             searchN(k) = searchNum;
             searchNum = 0;
             k = k + 1;
