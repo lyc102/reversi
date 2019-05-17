@@ -13,4 +13,5 @@ The stone state is given by the 8 x 8 matrix u.  Values  0: empty;   1: black;  
    - medium hard.  AI tree search (two steps)
    - hard but slow.  AI tree search (depth > 2)
    - hard and fast.  AI tree search with top N pruning
+   
 uncomment the corresponding subroutine to play with different AIs
