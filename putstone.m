@@ -6,6 +6,8 @@ function [u,currentColor,flipNum] = putstone(u,p,currentColor,flag)
 %
 % Long Chen 2019. May. 12.
 
+global searchNum
+searchNum = searchNum + 1;
 %% Double check if the location is empty
 if abs(u(p)) > 0
     beep

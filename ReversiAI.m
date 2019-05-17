@@ -10,7 +10,8 @@
 % Long Chen 2019. 
 % - May 13.  AI random
 % - May 14.  AI position value
-% - May 15.  AI tree search (depth 2)
+% - May 15.  AI tree search (two steps)
+% - May 16.  AI tree search (depth > 2)
 
 
 %% Initialize the game and draw the center stones
@@ -25,6 +26,10 @@ plotgame(u);
 currentColor = 1; % start from black 
 h = 1/8;
 pass = 0; 
+searchN = zeros(64,1);
+global searchNum
+searchNum = 0;
+k = 1;
 while pass < 2 % exit with two consective pass 
     [x,y] = myginput(1,'circle');    
     j = round(x/h-0.5)+1;
@@ -44,11 +49,16 @@ while pass < 2 % exit with two consective pass
 %             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
 %             [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
 %             [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
-            [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
+%             [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
+            [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/10));            
+            searchN(k) = searchNum;
+            searchNum = 0;
+            k = k + 1;
         end
     end
 end
-
+searchN = searchN(1:k-1,1);
+figure; plot(searchN,'-*');
 %% Count 
 switch sign(sum(u(:)))
     case 1
