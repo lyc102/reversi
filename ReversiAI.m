@@ -16,7 +16,7 @@
 
 
 %% Initialize the game and draw the center stones
-plotboard; 
+% plotboard; 
 u = zeros(8,8);
 u(4,4) = 1;
 u(5,5) = 1;
@@ -48,10 +48,10 @@ while pass < 2 % exit with two consective pass
             pass = 0;
             pause(0.5);
 %             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
-%             [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
+            [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
 %             [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
 %             [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
-            [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/5));            
+%             [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/5));            
             searchN(k) = searchNum;
             searchNum = 0;
             k = k + 1;
