@@ -36,22 +36,22 @@ flipIdx = findflipstone(u(i-1:-1:1,j),currentColor);
 isflip(i-flipIdx,j) = true;
 % line to the north-east
 lineIdx = 1:min([8-i,8-j]);
-lineIdx = sub2ind([8,8],i+lineIdx,j+lineIdx);
+lineIdx = mysub2ind([8,8],i+lineIdx,j+lineIdx);
 flipIdx = findflipstone(u(lineIdx),currentColor);
 isflip(lineIdx(flipIdx)) = true;
 % line to the south-west
 lineIdx = 1:min([i-1,j-1]);
-lineIdx = sub2ind([8,8],i-lineIdx,j-lineIdx);
+lineIdx = mysub2ind([8,8],i-lineIdx,j-lineIdx);
 flipIdx = findflipstone(u(lineIdx),currentColor);
 isflip(lineIdx(flipIdx)) = true;
 % line to the south-east
 lineIdx = 1:min([i-1,8-j]);
-lineIdx = sub2ind([8,8],i-lineIdx,j+lineIdx);
+lineIdx = mysub2ind([8,8],i-lineIdx,j+lineIdx);
 flipIdx = findflipstone(u(lineIdx),currentColor);
 isflip(lineIdx(flipIdx)) = true;
 % line to the north-west
 lineIdx = 1:min([8-i,j-1]);
-lineIdx = sub2ind([8,8],i+lineIdx,j-lineIdx);
+lineIdx = mysub2ind([8,8],i+lineIdx,j-lineIdx);
 flipIdx = findflipstone(u(lineIdx),currentColor);
 isflip(lineIdx(flipIdx)) = true;
 

@@ -13,7 +13,7 @@
 % - May 15.  AI tree search (two steps)
 % - May 15.  AI tree search (depth > 2)
 % - May 16.  AI tree search with top N pruning
-
+% - May 18.  AI tree search and MC simulation in the last 20 steps
 
 %% Initialize the game and draw the center stones
 % plotboard; 
@@ -46,12 +46,13 @@ while pass < 2 % exit with two consective pass
         [u,currentColor,flipNum] = putstone(u,p,currentColor);
         if flipNum || pass == 1
             pass = 0;
-            pause(0.5);
+            pause(0.25);
 %             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
 %             [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
 %             [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
 %             [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
-            [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/5));            
+%             [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/5));   
+            [u,currentColor,pass] = AIMCTS(u,currentColor,pass,30+floor(k/1),18);           
             searchN(k) = searchNum;
             searchNum = 0;
             k = k + 1;
