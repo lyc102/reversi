@@ -57,9 +57,8 @@ while pass < 2 % exit with two consective pass
     %             [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
     %             [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
     %             [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
-    %             [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/5));   
-    %             [u,currentColor,pass] = AIMCTS(u,currentColor,pass,40-floor(k/5),16);                       
-        [u,currentColor,pass] = MCTS(u,currentColor,pass,2000+k*10,40);
+    %             [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,4);   
+        [u,currentColor,pass] = AIMCTS(u,currentColor,pass,2000+k*10,40,10);
         searchN(k) = searchNum;
         searchNum = 0;
         k = k + 1;    
