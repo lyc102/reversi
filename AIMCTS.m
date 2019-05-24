@@ -1,8 +1,8 @@
 function  [u,currentColor,pass] = AIMCTS(u,currentColor,pass,N,switchNum,pweight)
-%% AIMCTS Monto Carlo Tree Search
+%% AIMCTS Monte Carlo Tree Search
 %
 %  [u,currentColor,pass] = AIMCTS(u,currentColor,pass,N,switchNum)
-%  implements Monto Carlo Tree Search (MCTS) algorithm. 
+%  implements Monte Carlo Tree Search (MCTS) algorithm. 
 %
 % - N is the upper bound for the rollout number and nodes. 
 % - swtichNum is used to swtich from AItree and AIMCTS since rollout in the early stage is too costly. 

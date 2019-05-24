@@ -1,5 +1,5 @@
 function [u,currentColor,pass] = AIMC(u,currentColor,pass,rollNum,switchNum)
-%% AIMC Monto Carlo method
+%% AIMC Monte Carlo method
 %
 % Generate position value by rollout 
 %
