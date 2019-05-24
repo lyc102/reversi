@@ -8,7 +8,7 @@
 figure('rend','painters','pos',[18 18 666 666]); % larger board
 %% Background
 clf;
-patch('Faces', [1,2,3,4], 'facecolor',[250 150 50]/255, ...
+patch('Faces', [1,2,3,4], 'facecolor',[225 150 75]/255, ...
       'Vertices', [-0.075,-0.075; 1.075,-0.075; 1.075,1.075; -0.075,1.075]);
 hold on
 %% Generate vertices and elements  
@@ -22,7 +22,7 @@ t2nidxMap = nodeidx(1:ni-1,1:nj-1);
 k = t2nidxMap(:);
 elem = [k k+ni k+ni+1 k+1];
 %% Draw the board
-patch('Faces', elem, 'Vertices', [x(:),y(:)],'Facecolor',[250 150 50]/255,...
+patch('Faces', elem, 'Vertices', [x(:),y(:)],'Facecolor',[250 180 100]/255,...
       'Linewidth',1.125);
 view(2); axis equal; axis tight; axis off;
 % hold off;

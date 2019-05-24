@@ -8,6 +8,7 @@ function [u,currentColor,pass] = AItreetop3(u,currentColor,pass,depth,topN)
 [validPosition,value,tempPass] = positionvaluetop3(u,currentColor,depth,topN);
 % showvalue(validPosition,value,currentColor);
 if tempPass % no valid position, then pass
+%    pause
    pass = pass + 1;
    currentColor = - currentColor;
    return

@@ -14,6 +14,7 @@
 % - May 15.  AI tree search (depth > 2)
 % - May 16.  AI tree search with top N pruning
 % - May 18.  AI tree search and MC simulation in the last 20 steps
+% - May 22.  AI MCTS
 
 %% Initialize the game and draw the center stones
 % plotboard; 
@@ -31,6 +32,7 @@ searchN = zeros(64,1);
 global searchNum
 searchNum = 0;
 k = 1;
+% tree = [];
 while pass < 2 % exit with two consective pass 
     [x,y] = myginput(1,'circle');    
     j = round(x/h-0.5)+1;
@@ -38,25 +40,29 @@ while pass < 2 % exit with two consective pass
     if (i<1) || (i>8)|| (j<1) || (j>8) % click out of the board is pass
         pass = pass + 1;
         currentColor = - currentColor;
-        continue;
+        flipNum = 1;
+    else
+        p = sub2ind([8,8],i,j);
+        if u(i,j) == 0 % no stone
+            % put the stone and reverse stones captured
+            [u,currentColor,flipNum] = putstone(u,p,currentColor);
+            if flipNum
+                pass = 0;
+            end
+        end        
     end
-    p = sub2ind([8,8],i,j);
-    if u(i,j) == 0 || pass == 1 % no stone or pass
-        % put the stone and reverse stones captured
-        [u,currentColor,flipNum] = putstone(u,p,currentColor);
-        if flipNum || pass == 1
-            pass = 0;
-            pause(0.25);
+    if flipNum && pass < 2 % flip (pass = 0) or pass (pass = 1)
+        pause(0.25);
 %             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
-%             [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
-%             [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
-%             [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
-%             [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/5));   
-            [u,currentColor,pass] = AIMCTS(u,currentColor,pass,30+floor(k/1),18);           
-            searchN(k) = searchNum;
-            searchNum = 0;
-            k = k + 1;
-        end
+    %             [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
+    %             [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
+    %             [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
+    %             [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,4+floor(k/5));   
+    %             [u,currentColor,pass] = AIMCTS(u,currentColor,pass,40-floor(k/5),16);                       
+        [u,currentColor,pass] = MCTS(u,currentColor,pass,2000+k*10,40);
+        searchN(k) = searchNum;
+        searchNum = 0;
+        k = k + 1;    
     end
 end
 searchN = searchN(1:k-1,1);

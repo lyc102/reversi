@@ -12,7 +12,7 @@
 
 %% Initialize the game and draw the center stones
 % plotboard; 
-u = zeros(8,8);
+u = zeros(8,8,'int8');
 u(4,4) = 1;
 u(5,5) = 1;
 u(4,5) = -1;
@@ -31,28 +31,31 @@ while pass < 2 % exit with pass = 1
 %     [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
 %     [u,currentColor,pass] = AItreetop3(u,currentColor,pass,5,3+floor(k/5));            
 %      k = k + 1;
-    [u,currentColor,pass] = AItree(u,currentColor,pass,3);  
-%     [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,4);            
+    pause(0.15)
+%     [u,currentColor,pass] = AItree(u,currentColor,pass,3);  
+    [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40,10);
+%     [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,5);            
 %     [u,currentColor,pass] = AItree2level(u,currentColor,pass);   
-    pause(0.25)
+    pause(0.15)
 %     gif;
 %     [u,currentColor,pass] = AIrand(u,currentColor,pass);    
 %     [u,currentColor,pass] = AItree2level(u,currentColor,pass);   
 %     [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,4);            
 %     [u,currentColor,pass] = AItree(u,currentColor,pass,3);  
-    [u,currentColor,pass] = AIMCTS(u,currentColor,pass,20+floor(k/1),30); 
+%     [u,currentColor,pass] = AIMCTS(u,currentColor,pass,20+floor(k/1),30); 
+    [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40);
     k = k + 1;
-    pause(0.25)
 %     pause;
 %     gif;
 end
 
 %% Count 
-switch sign(sum(u(:)))
+win = int8(sum(u(:)));
+switch sign(win)
     case 1
-        msgbox('Black Wins!')
+        msgbox('Black win'); display(compose('Black Wins %d',win));
     case -1
-        msgbox('White Wins')
+        msgbox('White Wins'); display(compose('White Wins %d',-win));
     case 0
         msgbox('Tie')
 end

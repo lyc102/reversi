@@ -1,56 +1,149 @@
-function [u,currentColor,pass] = AIMCTS(u,currentColor,pass,rollNum,switchNum)
-%% AIPOSITIONVALUE put a stone by a position value
+function  [u,currentColor,pass] = AIMCTS(u,currentColor,pass,N,switchNum,pweight)
+%% AIMCTS Monto Carlo Tree Search
 %
+%  [u,currentColor,pass] = AIMCTS(u,currentColor,pass,N,switchNum)
+%  implements Monto Carlo Tree Search (MCTS) algorithm. 
 %
-% Long Chen 2019. May. 18.
+% - N is the upper bound for the rollout number and nodes. 
+% - swtichNum is used to swtich from AItree and AIMCTS since rollout in the early stage is too costly. 
+% - pweigth is the weight used in the initialization of winning rate.
+%  winning rate = pweight*positionvalue/sum(sum(positionvalue))
+%  Larger pweight will emphasize more on the position value. 
+%  
+% [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40,1.2);
+%
+% Long Chen 2019. May. 24.
 
+%%
+if ~exist('pweight','var')
+    pweight = 1;     
+end
 p = find(u(:) == 0);
 emptyNum = length(p);
-%% Get all possible location and value from tree search
-if emptyNum > switchNum
-    [validPosition,value,tempPass] = positionvaluetop3(u,currentColor,3,5);
-else
-    [validPosition,value,tempPass] = positionvalue(u,currentColor,0);
+if isempty(emptyNum)
+    pass = pass + 1;
+    return;
 end
-% showvalue(validPosition,value,currentColor);
-if tempPass % no valid position, then pass
-   pass = pass + 1;
-   currentColor = - currentColor;
+%% Use AItree for the first siwtchNum steps
+if emptyNum > switchNum
+   [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,4);  
+%    [u,currentColor,pass] = AItree(u,currentColor,pass,3); 
    return
 end
-%% Value from the roll out
-rolloutValue = zeros(length(validPosition),1);
-if emptyNum < switchNum % the last 20 use MCTS
-    for i = 1:length(validPosition)
-        [tempu,tempColor] = putstone(u,validPosition(i),currentColor,0); 
-        windiff = 0;
-        for r = 1:min(rollNum,factorial(emptyNum))
-            windiff = windiff + rollout(tempu,tempColor);
+
+%% initilization
+N = min([N, 1+ceil(factorial(emptyNum))]);
+node2child = zeros(N,2,'uint32');
+node2dad = zeros(N,1,'uint32');
+nodeVisitNum = ones(N,1);
+nodeBlackWinNum = zeros(N,1);
+nodePosition = zeros(N,1,'uint8');
+%% Add the first level of nodes
+[validPosition,value,nextPass] = positionvalue(u,currentColor,0);
+if nextPass == 1
+    pass = pass + nextPass;
+    currentColor = -currentColor;
+    return;
+end
+firstLevelIdx = 2:(length(value)+1);
+nodePosition(firstLevelIdx) = validPosition;
+node2child(1,1) = 2;
+node2child(1,2) = length(value)+1;
+node2dad(firstLevelIdx) = 1;
+nodeBlackWinNum(firstLevelIdx) = pweight*value/sum(value);
+if currentColor == -1
+    nodeBlackWinNum(firstLevelIdx) = 1 - nodeBlackWinNum(firstLevelIdx);
+end
+lastIdx = firstLevelIdx(end);
+%% MCTS
+rolloutNum = 1;
+selectIdx = 1; % start from the root
+score = zeros(20,1);
+% [~,selectIdx] = max(nodeScore(1:firstLevelIdx(end)));
+while rolloutNum <= N && lastIdx <= N
+    if selectIdx == 1 % root
+        % compute scores
+        if currentColor == 1 % black
+            score(firstLevelIdx) = nodeBlackWinNum(firstLevelIdx)./nodeVisitNum(firstLevelIdx);  
+        else % white -- chose min value
+            score(firstLevelIdx) = 1-nodeBlackWinNum(firstLevelIdx)./nodeVisitNum(firstLevelIdx);  
         end
-        if currentColor == 1 
-            rolloutValue(i) = 0.5*windiff/rollNum + 0.5; % probability of black wins
-        else
-            rolloutValue(i) = 0.5-0.5*windiff/rollNum; % probability of white wins
+        score(firstLevelIdx) = score(firstLevelIdx) + ...
+                           2*sqrt(log(nodeVisitNum(node2dad(2)))./nodeVisitNum(firstLevelIdx));
+        [~,selectIdx] = max(score(firstLevelIdx)); % chose one from the first level 
+        selectIdx = firstLevelIdx(selectIdx);
+        [unow,unowColor] = putstone(u,nodePosition(selectIdx),currentColor,0);  
+%         plotgame(unow);
+    end
+    if nodeVisitNum(selectIdx) == 1 || node2child(selectIdx,1) == 0 
+        % not visit before or leaf
+        win = rollout(unow,unowColor); % one simulation
+        rolloutNum = rolloutNum + 1;
+        % update visit number and number of black wins
+        nodeVisitNum(selectIdx) = nodeVisitNum(selectIdx) + 1;
+        if win == 1 
+            nodeBlackWinNum(selectIdx) = nodeBlackWinNum(selectIdx) + win;
+        end
+        % add all children nodes       
+        [validPosition,value,nextPass] = positionvalue(unow,unowColor,0);
+        if (nextPass==1) && ~isempty(validPosition) && nodePosition(selectIdx)>0
+        % - nextPass && isempty(validPosition) is no empty space
+        % - nextPass && nodePosition(selectIdx) == 0: the current is already pass
+        % without adding more child nodes sets selectIdx as a leaf
+            nodePosition(lastIdx+1) = 0;
+            node2dad(lastIdx+1) = selectIdx;
+            node2child(selectIdx,1) = lastIdx+1;
+            node2child(selectIdx,2) = lastIdx+1;
+            lastIdx = lastIdx + 1;
+            % above: add a node for one pass
+        elseif any(validPosition)
+            % below: add all valid moves as child nodes
+            childNum = length(value);
+            nodePosition(lastIdx+1:lastIdx+childNum) = validPosition;
+            node2dad(lastIdx+1:lastIdx+childNum) = selectIdx;
+            node2child(selectIdx,1) = lastIdx+1;
+            node2child(selectIdx,2) = lastIdx+childNum;
+            nodeBlackWinNum(lastIdx+1:lastIdx+childNum) = pweight*value/sum(value);
+            if unowColor == - 1
+                nodeBlackWinNum(lastIdx+1:lastIdx+childNum) = 1-nodeBlackWinNum(lastIdx+1:lastIdx+childNum);
+            end
+            lastIdx = lastIdx + childNum;
+        end
+        % update visit and win numbers of parent nodes up to the root
+        while selectIdx > 1
+            % move up
+            selectIdx = node2dad(selectIdx);
+            unowColor = -unowColor;
+            % update dad node
+            nodeVisitNum(selectIdx) = nodeVisitNum(selectIdx) + 1;
+            if win == 1 
+                nodeBlackWinNum(selectIdx) = nodeBlackWinNum(selectIdx) + win;
+            end
+        end
+    else % visited before, 
+        if node2child(selectIdx,1) ~= 0 % not leaf, then chose one from its children
+            child = node2child(selectIdx,1):node2child(selectIdx,2);
+            childNum = length(child);
+            % compute scores
+            if unowColor == 1 % black
+                score(1:childNum) = nodeBlackWinNum(child)./nodeVisitNum(child);  
+            else % white -- chose min value
+                score(1:childNum) = 1-nodeBlackWinNum(child)./nodeVisitNum(child);  
+            end                           
+            score(1:childNum) = score(1:childNum) + ...
+                               2*sqrt(log(nodeVisitNum(selectIdx))./nodeVisitNum(child));
+            [~,selectIdx] = max(score(1:childNum));
+            selectIdx = child(selectIdx);
+            if nodePosition(selectIdx)~=0 % 0 is pass
+                [unow,unowColor] = putstone(unow,nodePosition(selectIdx),unowColor,0); 
+            else % pass
+                unowColor = -unowColor;
+            end
         end
     end
 end
-if emptyNum < switchNum
-    [flipNum,bestpt1] = max(value);
-    [flipNum,bestpt] = max(rolloutValue+0.001*value);
-%     if bestpt1~=bestpt
-%         plotgame(u);
-%         showvalue(validPosition,value,currentColor);
-%         plotgame(u);
-%         showvalue(validPosition,rolloutValue,currentColor);
-%     end
-else
-    [flipNum,bestpt] = max(value);
-end
-if flipNum     
-   [u,currentColor] = putstone(u,validPosition(bestpt),currentColor); 
-   pass = 0;
-else
-% it is possible all empty space are not valid, then pass
-   pass = pass + 1;
-   currentColor = - currentColor;
-end
+%% Chose the first level node with max visit
+[~,bestpt] = max(nodeVisitNum(firstLevelIdx));
+bestpt = firstLevelIdx(bestpt);
+[u,currentColor] = putstone(u,nodePosition(bestpt),currentColor); 
+pass = 0;

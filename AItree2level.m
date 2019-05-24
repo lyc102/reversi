@@ -7,7 +7,9 @@ function [u,currentColor,pass] = AItree2level(u,currentColor,pass)
 
 %% Get all possible location and value
 [validPosition,value,tempPass] = positionvalue(u,currentColor,0);
+% plotgame(u);
 % showvalue(validPosition,value,currentColor);
+oldvalue = value;
 if tempPass % no valid position, then pass
    pass = pass + 1;
    currentColor = - currentColor;
@@ -24,8 +26,16 @@ for i = 1:length(validPosition)
         value(i) = value(i) - max(tempValue(:));
     end
 end
-% showvalue(validPosition,value,currentColor);
 %% Put the stone in the best position
 [flipNum,bestpt] = max(value);
+[flipNum,oldbestpt] = max(oldvalue);
+if oldbestpt~=bestpt
+    plotgame(u);
+    showvalue(validPosition,value,currentColor);
+    plotgame(u);
+    showvalue(validPosition,oldvalue,currentColor);
+    pause
+    figure(1);
+end
 [u,currentColor] = putstone(u,validPosition(bestpt),currentColor); 
 pass = 0;
