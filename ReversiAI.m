@@ -17,8 +17,7 @@
 % - May 22.  AI MCTS
 
 %% Initialize the game and draw the center stones
-% plotboard; 
-u = zeros(8,8);
+u = zeros(8,8,'int8');
 u(4,4) = 1;
 u(5,5) = 1;
 u(4,5) = -1;
@@ -58,7 +57,7 @@ while pass < 2 % exit with two consective pass
     %             [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
     %             [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
     %             [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,4);   
-        [u,currentColor,pass] = AIMCTS(u,currentColor,pass,2000+k*10,40,10);
+        [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40,1.2);
         searchN(k) = searchNum;
         searchNum = 0;
         k = k + 1;    
@@ -67,11 +66,12 @@ end
 searchN = searchN(1:k-1,1);
 figure; plot(searchN,'-*');
 %% Count 
-switch sign(sum(u(:)))
+win = int8(sum(u(:)));
+switch sign(win)
     case 1
-        msgbox('Black Wins!')
+        msgbox('Black win'); display(compose('Black Wins %d',win));
     case -1
-        msgbox('White Wins')
+        msgbox('White Wins'); display(compose('White Wins %d',-win));
     case 0
         msgbox('Tie')
 end

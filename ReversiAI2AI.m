@@ -40,10 +40,10 @@ while pass < 2 % exit with pass = 1
 %     gif;
 %     [u,currentColor,pass] = AIrand(u,currentColor,pass);    
 %     [u,currentColor,pass] = AItree2level(u,currentColor,pass);   
-%     [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,4);            
+    [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,4);            
 %     [u,currentColor,pass] = AItree(u,currentColor,pass,3);  
 %     [u,currentColor,pass] = AIMCTS(u,currentColor,pass,20+floor(k/1),30); 
-    [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40);
+%     [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40);
     k = k + 1;
 %     pause;
 %     gif;

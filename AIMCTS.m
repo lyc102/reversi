@@ -30,7 +30,6 @@ if emptyNum > switchNum
 %    [u,currentColor,pass] = AItree(u,currentColor,pass,3); 
    return
 end
-
 %% initilization
 N = min([N, 1+ceil(factorial(emptyNum))]);
 node2child = zeros(N,2,'uint32');
@@ -44,6 +43,11 @@ if nextPass == 1
     pass = pass + nextPass;
     currentColor = -currentColor;
     return;
+end
+if length(nodePosition) == 1 && nextPass == 0 % only one valide move
+    [u,currentColor] = putstone(u,nodePosition(1),currentColor); 
+    pass = 0;
+    return
 end
 firstLevelIdx = 2:(length(value)+1);
 nodePosition(firstLevelIdx) = validPosition;
@@ -59,8 +63,7 @@ lastIdx = firstLevelIdx(end);
 rolloutNum = 1;
 selectIdx = 1; % start from the root
 score = zeros(20,1);
-% [~,selectIdx] = max(nodeScore(1:firstLevelIdx(end)));
-while rolloutNum <= N && lastIdx <= N
+while rolloutNum <= N && lastIdx <= N && max(nodeVisitNum(firstLevelIdx)) < N/3
     if selectIdx == 1 % root
         % compute scores
         if currentColor == 1 % black
