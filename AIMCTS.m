@@ -26,12 +26,12 @@ if isempty(emptyNum)
 end
 %% Use AItree for the first siwtchNum steps
 if emptyNum > switchNum
-   [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,4);  
+   [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,6);  
 %    [u,currentColor,pass] = AItree(u,currentColor,pass,3); 
    return
 end
 %% initilization
-N = min([N, 1+ceil(factorial(emptyNum))]);
+N = min([N, 100+ceil(factorial(emptyNum))]);
 node2child = zeros(N,2,'uint32');
 node2dad = zeros(N,1,'uint32');
 nodeVisitNum = ones(N,1);

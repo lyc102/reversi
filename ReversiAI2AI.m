@@ -31,18 +31,18 @@ while pass < 2 % exit with pass = 1
 %     [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
 %     [u,currentColor,pass] = AItreetop3(u,currentColor,pass,5,3+floor(k/5));            
 %      k = k + 1;
-    pause(0.15)
-%     [u,currentColor,pass] = AItree(u,currentColor,pass,3);  
-    [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40,10);
-%     [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,5);            
+    pause(0.01)
+    [u,currentColor,pass] = AItree(u,currentColor,pass,3);  
+%     [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40,1);
+%     [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,6);            
 %     [u,currentColor,pass] = AItree2level(u,currentColor,pass);   
-    pause(0.15)
+    pause(0.01)
 %     gif;
 %     [u,currentColor,pass] = AIrand(u,currentColor,pass);    
 %     [u,currentColor,pass] = AItree2level(u,currentColor,pass);   
-    [u,currentColor,pass] = AItreetop3(u,currentColor,pass,4,4);            
+%     [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,6);            
 %     [u,currentColor,pass] = AItree(u,currentColor,pass,3);  
-%     [u,currentColor,pass] = AIMCTS(u,currentColor,pass,20+floor(k/1),30); 
+    [u,currentColor,pass] = AIMCTStop3(u,currentColor,pass,3000+k*10,40,10);
 %     [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40);
     k = k + 1;
 %     pause;
@@ -53,9 +53,12 @@ end
 win = int8(sum(u(:)));
 switch sign(win)
     case 1
-        msgbox('Black win'); display(compose('Black Wins %d',win));
+%         msgbox('Black win'); 
+        disp(compose('Black Wins %d',win));
     case -1
-        msgbox('White Wins'); display(compose('White Wins %d',-win));
+%         msgbox('White Wins'); 
+        disp(compose('White Wins %d',-win));
     case 0
-        msgbox('Tie')
+%         msgbox('Tie')
+        disp('Tie');
 end
