@@ -1,4 +1,4 @@
-function  [u,currentColor,pass] = AIMCTS(u,currentColor,pass,N,switchNum,pweight)
+function  [u,currentColor,pass] = AIMCTS(u,currentColor,pass,N,switchNum,flag)
 %% AIMCTS Monte Carlo Tree Search
 %
 %  [u,currentColor,pass] = AIMCTS(u,currentColor,pass,N,switchNum)
@@ -14,10 +14,11 @@ function  [u,currentColor,pass] = AIMCTS(u,currentColor,pass,N,switchNum,pweight
 %
 % Long Chen 2019. May. 24.
 
-%%
-if ~exist('pweight','var')
-    pweight = 1;     
+if ~exist('flag','var')  % flag = 0 is used to count the possible flip
+    flag = 1;     
 end
+%%
+pweight = 1;     
 p = find(u(:) == 0);
 emptyNum = length(p);
 if isempty(emptyNum)
@@ -26,7 +27,7 @@ if isempty(emptyNum)
 end
 %% Use AItree for the first siwtchNum steps
 if emptyNum > switchNum
-   [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,6);  
+   [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,6,flag);  
 %    [u,currentColor,pass] = AItree(u,currentColor,pass,3); 
    return
 end
@@ -148,5 +149,5 @@ end
 %% Chose the first level node with max visit
 [~,bestpt] = max(nodeVisitNum(firstLevelIdx));
 bestpt = firstLevelIdx(bestpt);
-[u,currentColor] = putstone(u,nodePosition(bestpt),currentColor); 
+[u,currentColor] = putstone(u,nodePosition(bestpt),currentColor,flag); 
 pass = 0;
