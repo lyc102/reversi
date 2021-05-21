@@ -19,5 +19,7 @@ if tempPass % no valid position, then pass
 end
 %% Put the stone in the best position
 [flipNum,bestpt] = max(value);
-[u,currentColor] = putstone(u,validPosition(bestpt),currentColor,flag); 
-pass = 0;
+if flipNum >0
+    [u,currentColor] = putstone(u,validPosition(bestpt),currentColor,flag); 
+    pass = 0;
+end

@@ -16,6 +16,14 @@
 % - May 18.  AI tree search and MC simulation in the last 20 steps
 % - May 22.  AI MCTS
 
+prompt = {'Enter a difficulty level'};
+dlgtitle = 'Difficulty Level';
+definput = {'3'};
+dims = [1 40];
+opts.Interpreter = 'tex';
+answer = inputdlg(prompt,dlgtitle,dims,definput,opts);
+hardlevel = str2double(cell2mat(answer));
+
 %% Initialize the game and draw the center stones
 u = zeros(8,8,'int8');
 u(4,4) = 1;
@@ -23,6 +31,7 @@ u(5,5) = 1;
 u(4,5) = -1;
 u(5,4) = -1;
 plotgame(u);
+
 %% Play the game
 currentColor = 1; % start from black 
 h = 1/8;
@@ -53,27 +62,38 @@ while pass < 2 % exit with two consective pass
     end
     if flipNum % flip (pass = 0) or pass (pass = 1)
         pause(0.5);
-%             [u,currentColor,pass] = AIrand(u,currentColor,pass); 
-%                 [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
+        switch hardlevel
+            case 0
+                [u,currentColor,pass] = AIrand(u,currentColor,pass); 
+            case 1 
+                [u,currentColor,pass] = AIpositionvalue(u,currentColor,pass);            
+            case 2
                 [u,currentColor,pass] = AItree2level(u,currentColor,pass);    
-    %             [u,currentColor,pass] = AItree(u,currentColor,pass,3);            
-%                 [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,6);   
+            case 3
+                [u,currentColor,pass] = AItreetop3(u,currentColor,pass,3,6);   
+            case 4
+                [u,currentColor,pass] = AItree(u,currentColor,pass,3);   
+            case 5
 %         [u,currentColor,pass] = AIMCTS(u,currentColor,pass,3000+k*10,40,1);
-%         [u,currentColor,pass] = AIMCTStop3(u,currentColor,pass,3000+k*10,40,8);
+                [u,currentColor,pass] = AIMCTStop3(u,currentColor,pass,3000+k*10,40,8);       
+        end
         searchN(k) = searchNum;
         searchNum = 0;
         k = k + 1;    
     end
 end
-searchN = searchN(1:k-1,1);
-figure; plot(searchN,'-*');
+% searchN = searchN(1:k-1,1);
+% figure; plot(searchN,'-*');
+
 %% Count 
 win = int8(sum(u(:)));
 switch sign(win)
     case 1
-        msgbox('Black win'); disp(compose('Black Wins %d',win));
+        msgbox(['Black wins  ' int2str(win)]); 
+        disp(compose('Black Wins %d',win));
     case -1
-        msgbox('White Wins'); disp(compose('White Wins %d',-win));
+        msgbox(['White Wins  ' int2str(-win)]); 
+        disp(compose('White Wins %d',-win));
     case 0
         msgbox('Tie'); disp('Tie');
 end

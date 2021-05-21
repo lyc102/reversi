@@ -18,3 +18,5 @@ fig = plot(x(isWhite),y(isWhite),'ko','MarkerFaceColor','w','MarkerSize',36);
 if nargin>2
     set(fig,varargin{1:end});
 end
+ax = gca;
+disableDefaultInteractivity(ax);
